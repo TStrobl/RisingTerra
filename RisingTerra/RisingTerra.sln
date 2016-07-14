@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RisingTerra.CSharp.Plugins", "RisingTerra.CSharp.Plugins.csproj", "{568417E1-DB61-AAAE-D948-220AC34F28DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RisingTerra.CSharp.Editor", "RisingTerra.CSharp.Editor.csproj", "{5CDF728C-EAB3-24A6-D9C6-6450C2130831}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{568417E1-DB61-AAAE-D948-220AC34F28DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{568417E1-DB61-AAAE-D948-220AC34F28DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{568417E1-DB61-AAAE-D948-220AC34F28DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{568417E1-DB61-AAAE-D948-220AC34F28DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CDF728C-EAB3-24A6-D9C6-6450C2130831}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CDF728C-EAB3-24A6-D9C6-6450C2130831}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CDF728C-EAB3-24A6-D9C6-6450C2130831}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CDF728C-EAB3-24A6-D9C6-6450C2130831}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
