@@ -1,0 +1,14 @@
+- Burg/Heimatausbau
+- Resourcen sammeln
+- Aufleveln
+- Gold
+- Ausrüstung bauen
+- Ausrüstung mit Resourcen und Gold verbessern
+- Biome bzw. Levels mit Levelbereich
+- Flug / Teleport zum neuen Level
+- Epochen, von Steinzeit zur Moderne
+- Dungeons
+- Leute anheuern um Resourcen zu sammeln
+- Dekoratives Zeug
+- Bauplatz in der Heimatbasis. Durch Gold erweiterbar.
+- VErteidgung der Basis / Heimat (TowerDefense und/ oder Einheiten?)
