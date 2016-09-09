@@ -74,6 +74,7 @@
     <Compile Include="Assets\GameObjects\World\Biome.cs" />
     <Compile Include="Assets\GameObjects\World\Block.cs" />
     <Compile Include="Assets\GameObjects\World\Enums.cs" />
+    <Compile Include="Assets\GameObjects\World\Test.cs" />
     <Compile Include="Assets\GameObjects\World\World.cs" />
     <Compile Include="Assets\MyAssets\TileRenderer.cs" />
     <Compile Include="Assets\PlayerControl.cs" />
