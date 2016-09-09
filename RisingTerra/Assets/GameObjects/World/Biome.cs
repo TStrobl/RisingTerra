@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Boo.Lang;
+using System.Collections.Generic;
 
-public class Biome : MonoBehaviour
+public class Biome : ScriptableObject
 {
     /// <summary>
     /// Das Level, also wie stark z.B. die Gegner sind

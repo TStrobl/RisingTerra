@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class World : MonoBehaviour {
+public class World : ScriptableObject
+{
 
     /// <summary>
     /// Name der Welt
