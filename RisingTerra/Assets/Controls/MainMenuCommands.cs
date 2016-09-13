@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Assets.GameObjects.World;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RisingTerra.Assets.Controls
 {
@@ -32,41 +34,15 @@ namespace RisingTerra.Assets.Controls
                 firstBiome.Width = 2000;
             }
 
+            var builder = ScriptableObject.CreateInstance<WorldBuilder>();
+            builder.BuildBiome(Enums.WorldSize.Big, Enums.BiomeTypes.Home, "D:\\Home1.bak", "Home");
+        }
 
-            firstBiome.Blocks = new List<Block>();
-
-            var typeRandomizer = new System.Random();
-
-
-            using (var fs = File.Create("D:\\World_1.bak"))
-            {
-                var binaryWriter = new System.IO.BinaryWriter(fs);
-
-                for (int i = 0; i < 700; i++)
-                {
-                    // Debug.Log("Reihe " + i);
-                    for (int j = 0; j < 700; j++)
-                    {
-                        //binaryWriter.Write((ushort)i);
-                        //binaryWriter.Write((ushort)j);
-                        ////binaryWriter.Write((byte)i);
-                        ////binaryWriter.Write((byte)typeRandomizer.Next(255));
-                        ////binaryWriter.Write((byte)typeRandomizer.Next(255));
-                        //binaryWriter.Write((ushort)typeRandomizer.Next(65000));
-                        //binaryWriter.Write((ushort)typeRandomizer.Next(65000));
-                        ////binaryWriter.Write(j);
-                        ////binaryWriter.Write((byte)typeRandomizer.Next(200));
-                        ////binaryWriter.Write((byte)typeRandomizer.Next(200));
-                        var block = ScriptableObject.CreateInstance(typeof(Block)) as Block;
-                        block.X = (ushort)j;
-                        block.Y = (ushort)i;
-                        block.ForegroundType = (ushort)typeRandomizer.Next(200);
-                        block.BackgroundType = (ushort)typeRandomizer.Next(200);
-                        firstBiome.Blocks.Add(block);
-                    }
-                }
-            }
-
+        public void ClickStartGameButton()
+        {
+            //Jetzt ins Hauptspiel wechseln
+            ApplicationModel.CurrentBiomeFileName = "D:\\Home1.bak";
+            SceneManager.LoadScene("Scenes/MainWorld");
         }
     }
 }

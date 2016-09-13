@@ -14,5 +14,4 @@ public class World : ScriptableObject
     /// Die einzelnen Biome / Levels
     /// </summary>
     public List<Biome> Biomes { get; set; }
-
 }

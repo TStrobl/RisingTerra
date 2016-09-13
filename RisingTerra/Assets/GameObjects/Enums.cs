@@ -15,4 +15,25 @@ public class Enums : MonoBehaviour
         Gras,
         Snow
     }
+
+    public enum BlockClass
+    {
+        Foreground,
+        Background,
+        Item,
+        Mine
+    }
+
+    /// <summary>
+    /// Die möglichen Basis-Blöcke - Blöcke, die das grundlegende Layout eines Bioms darstellen, ohne Besonderheiten wie Dungeons, Minen, die Basis usw.
+    /// </summary>
+    public enum BaseBlockType
+    {
+        Nothing,
+        Earth,
+        Stone,
+        Water,
+        Iron,
+        Coal
+    }
 }
