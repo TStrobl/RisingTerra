@@ -17,6 +17,16 @@ public class Biome : MonoBehaviour
     private int _currentY;
 
     /// <summary>
+    /// Alle Blöcke im Biome im Vordergrund
+    /// </summary>
+    private List<GameObject> _allVisibleFGBlocks;
+
+    /// <summary>
+    /// Alle Blöcke im Biome im Hintergrund
+    /// </summary>
+    private List<GameObject> _allVisibleBGBlocks;
+
+    /// <summary>
     /// Name des Bioms
     /// </summary>
     public string Name { get; set; }
@@ -25,6 +35,16 @@ public class Biome : MonoBehaviour
     /// Name zur Bak-Datei (Save)
     /// </summary>
     public string SaveFileName;
+
+    /// <summary>
+    /// Block für Erde im Vordergrund
+    /// </summary>
+    public GameObject EarthBlockForeground;
+
+    /// <summary>
+    /// Block für Erde im Vordergrund
+    /// </summary>
+    public GameObject EarthBlockBackground;
 
     /// <summary>
     /// Das Level, also wie stark z.B. die Gegner sind
@@ -73,10 +93,14 @@ public class Biome : MonoBehaviour
         return result;
     }
 
+
+
     void Start()
     {
         this.SaveFileName = ApplicationModel.CurrentBiomeFileName;
         this.SaveFileName = "D:\\Home1.bak";
+        this._allVisibleFGBlocks = new List<GameObject>();
+        this._allVisibleBGBlocks = new List<GameObject>();
 
         using (var fs = File.OpenRead(this.SaveFileName))
         {
@@ -88,30 +112,41 @@ public class Biome : MonoBehaviour
             this.Width = ApplicationModel.GetWorldWidth(this.WorldSize);
             this.Height = ApplicationModel.GetWorldHeight(this.WorldSize);
 
-            //Wir beginnen erst einmal auf dem Boden in der horizontalen Mitte
+
             this._currentX = this.Width / 2;
             this._currentY = 203;
 
-            ushort relativePositionX = 0;
-            ushort relativePositionY = 0;
+            var beginPosY = (this._currentY * this.Width) * WorldCreationBlock.ByteSize;
+            var beginPosX = (this._currentX - (ApplicationModel.VisibleBlocksHorizontal / 2)) * WorldCreationBlock.ByteSize;
 
-            var beginPosY = (this._currentY * this.Width) * 8;
-            var beginPosX = (this._currentX - 100) * 8;
-
-            //Direkt auf die benöitgte Reihe und Spalte springen
+            //Direkt auf die benötigte Reihe und Spalte springen
             fs.Seek(beginPosY + beginPosX, SeekOrigin.Current);
-
-            for (int j = 0; j < 200; j++)
+            for (int j = 0; j < ApplicationModel.VisibleBlocksVertical; j++)
             {
-                for (int i = 0; i < 200; i++) //200 Blöcke auslesen
+                for (int i = 0; i < ApplicationModel.VisibleBlocksHorizontal; i++)
                 {
-                    var blockPosX = binaryReader.ReadUInt16();
-                    var blockPosY = binaryReader.ReadUInt16();
                     var blockTypeBG = binaryReader.ReadUInt16();
                     var blockTypeFG = binaryReader.ReadUInt16();
+                    GameObject block = null;
+                    if (blockTypeFG > 0)
+                    {
+                        block = Instantiate(EarthBlockForeground, new Vector3((i * ApplicationModel.BlockWidth) - (ApplicationModel.VisibleBlocksHorizontal * ApplicationModel.BlockWidth / 2), (j * ApplicationModel.BlockHeight) - (ApplicationModel.VisibleBlocksVertical * ApplicationModel.BlockHeight / 2)), Quaternion.identity) as GameObject;
+                        this._allVisibleFGBlocks.Add(block);
+                    }
+                    else
+                    {
+                        block = Instantiate(EarthBlockBackground, new Vector3((i * ApplicationModel.BlockWidth) - (ApplicationModel.VisibleBlocksHorizontal * ApplicationModel.BlockWidth / 2), (j * ApplicationModel.BlockHeight) - (ApplicationModel.VisibleBlocksVertical * ApplicationModel.BlockHeight / 2)), Quaternion.identity) as GameObject;
+                        this._allVisibleBGBlocks.Add(block);
+                    }
+
+                    var baseBlockComponent = block.GetComponent<BaseBlock>();
+                    baseBlockComponent.RelativePosX = (ushort)i;
+                    baseBlockComponent.RelativePosY = (ushort)j;
+                    baseBlockComponent.PosX = (ushort)(this._currentX + i);
+                    baseBlockComponent.PosY = (ushort)(this._currentY + j);
                 }
                 //dann in die nächste Reihe springen, indem eimalig die maximale Breite hinzugefügt wird
-                fs.Seek((this.Width - 200) * 8, SeekOrigin.Current);
+                fs.Seek((this.Width - ApplicationModel.VisibleBlocksHorizontal) * WorldCreationBlock.ByteSize, SeekOrigin.Current);
             }
         }
     }

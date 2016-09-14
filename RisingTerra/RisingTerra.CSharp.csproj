@@ -73,7 +73,6 @@
     <Compile Include="Assets\Fonts\Script\scriptTexttest.cs" />
     <Compile Include="Assets\GameObjects\ApplicationModel.cs" />
     <Compile Include="Assets\GameObjects\Blocks\BaseBlock.cs" />
-    <Compile Include="Assets\GameObjects\Blocks\ForegroundBlock.cs" />
     <Compile Include="Assets\GameObjects\Enums.cs" />
     <Compile Include="Assets\GameObjects\Interfaces\IBlock.cs" />
     <Compile Include="Assets\GameObjects\World\Biome.cs" />

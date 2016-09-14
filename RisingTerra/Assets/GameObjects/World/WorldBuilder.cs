@@ -103,8 +103,10 @@ namespace Assets.GameObjects.World
 
                 foreach (var block in blocks)
                 {
-                    this._binaryWriter.Write(block.X);
-                    this._binaryWriter.Write(block.Y);
+                    //Da immer Reihe für Reihe und dabei Block für Block angegeben werden, ist eine Koordinate
+                    //normalerweise nicht nötig. Deswegen auskommentiert. Halbiert die Größe des Save-Files
+                    //this._binaryWriter.Write(block.X);
+                    //this._binaryWriter.Write(block.Y);
                     this._binaryWriter.Write(block.BackgroundType);
                     this._binaryWriter.Write(block.ForegroundType);
                 }

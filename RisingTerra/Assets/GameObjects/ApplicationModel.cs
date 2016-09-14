@@ -9,6 +9,26 @@ public class ApplicationModel
     public static string CurrentBiomeFileName { get; set; }
 
     /// <summary>
+    /// Die Anzahl der sichtbaren Blöcke in der Horizontalen
+    /// </summary>
+    public const int VisibleBlocksHorizontal = 200;
+
+    /// <summary>
+    /// Die Anzahl der sichtbaren Blöcke in der Vertikalen
+    /// </summary>
+    public const int VisibleBlocksVertical = 200;
+
+    /// <summary>
+    /// Höhe eines Blocks
+    /// </summary>
+    public const int BlockHeight = 25;
+
+    /// <summary>
+    /// Breite eines Blocks
+    /// </summary>
+    public const int BlockWidth = 25;
+
+    /// <summary>
     /// Gibt die Breite einer Welt zurück
     /// </summary>
     /// <param name="size"></param>

@@ -1,63 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Assets.GameObjects;
 
-[RequireComponent(typeof(SpriteRenderer))]
-public class BaseBlock : MonoBehaviour
-{
-    /// <summary>
-    /// Wurde der Block geladen / gerendert
-    /// </summary>
-    public bool Loaded { get; set; }
+public class BaseBlock : MonoBehaviour {
 
     /// <summary>
-    /// x-Koordinate des Blocks
+    /// Position auf der X-Achse
     /// </summary>
-    public ushort X { get; set; }
+    public ushort PosX;
 
     /// <summary>
-    /// Y-Koordinate des Blocks
+    /// Position auf der Y-Achse
     /// </summary>
-    public ushort Y { get; set; }
+    public ushort PosY;
 
     /// <summary>
-    /// Allgemeine Höhe eines Blocks
+    /// Relative Position auf der X-Achse (im sichtbaern BIOM-Feld)
     /// </summary>
-    public static ushort BlockHeight = 25;
+    public ushort RelativePosX;
 
     /// <summary>
-    /// Allgemeine Breite eines Blocks
+    /// Relative Position auf der Y-Achse (im sichtbaern BIOM-Feld)
     /// </summary>
-    public static ushort BlockWidth = 25;
+    public ushort RelativePosY;
 
     // Use this for initialization
-    public void Start()
-    {
-        if (!this.Loaded)
-        {
-            var sprite = ((IBlock)this).LoadSprite();
-            var spriteRenderer = this.GetComponent<SpriteRenderer>();
-            spriteRenderer.sprite = sprite;
-            spriteRenderer.sortingLayerName = ((IBlock)this).LayerName;
-
-
-
-            this.transform.localPosition = new Vector3(0,0);
-
-            this.Loaded = true;
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (!this.Loaded)
-        {
-            var sprite = ((IBlock)this).LoadSprite();
-            var spriteRenderer = this.GetComponent<SpriteRenderer>();
-            spriteRenderer.sprite = sprite;
-            spriteRenderer.sortingLayerName = ((IBlock)this).LayerName;
-            this.Loaded = true;
-        }
-    }
+    void Start () {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
 }

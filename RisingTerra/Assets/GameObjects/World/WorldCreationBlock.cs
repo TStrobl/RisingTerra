@@ -24,4 +24,9 @@ public struct WorldCreationBlock
     /// Typ des Blocks im Hintergrund
     /// </summary>
     public ushort BackgroundType { get; set; }
+
+    /// <summary>
+    /// Die Größe des Objekts zum Berechnen des BinaryReaders
+    /// </summary>
+    public static ushort ByteSize = 4;
 }
