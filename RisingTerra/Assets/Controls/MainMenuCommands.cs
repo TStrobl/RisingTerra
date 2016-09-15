@@ -35,13 +35,15 @@ namespace RisingTerra.Assets.Controls
             }
 
             var builder = ScriptableObject.CreateInstance<WorldBuilder>();
-            builder.BuildBiome(Enums.WorldSize.Big, Enums.BiomeTypes.Home, "D:\\Home1.bak", "Home");
+            builder.BuildBiome(Enums.WorldSize.Big, Enums.BiomeTypes.Gras, "D:\\Grass1.bak", "Grass");
+
+            this.ClickStartGameButton();
         }
 
         public void ClickStartGameButton()
         {
             //Jetzt ins Hauptspiel wechseln
-            ApplicationModel.CurrentBiomeFileName = "D:\\Home1.bak";
+            ApplicationModel.CurrentBiomeFileName = "D:\\Grass1.bak";
             SceneManager.LoadScene("Scenes/MainWorld");
         }
     }

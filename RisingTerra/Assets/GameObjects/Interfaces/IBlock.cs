@@ -11,7 +11,7 @@ namespace Assets.GameObjects
         /// <summary>
         /// Block-Klasse, also je nachdem was gerendert werden soll
         /// </summary>
-        Enums.BlockClass BlockClass { get; }
+        Enums.BlockLevel BlockClass { get; }
 
         /// <summary>
         /// Name des Layers

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.GameObjects.Biomes;
+using Assets.GameObjects.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,14 +42,14 @@ namespace Assets.GameObjects.World
         private BinaryWriter _binaryWriter;
 
         /// <summary>
-        /// Die möglichen Block-Typen für ein Biom
-        /// </summary>
-        private List<Enums.BaseBlockType> _possibleBlockTypes;
-
-        /// <summary>
         /// Der Typ des Bioms, der gebaut werden soll
         /// </summary>
         private Enums.BiomeTypes _biomeType;
+
+        /// <summary>
+        /// Alle Blöcke
+        /// </summary>
+        private List<WorldCreationBlock> _blocks;
 
         /// <summary>
         /// Baut ein Biom zusammen
@@ -59,17 +61,22 @@ namespace Assets.GameObjects.World
             this._biomeWidth = ApplicationModel.GetWorldWidth(size);
             this._biomeHeight = ApplicationModel.GetWorldHeight(size);
             this._biomeType = biomeType;
-            this._groundLevelMax = 203;
-            this._groundLevelMin = 197;
+            this._groundLevelMax = 201;
+            this._groundLevelMin = 199;
 
             this._biomeSaveFilePath = saveFilePath;
-            this._possibleBlockTypes = Biome.GetPossibleBaseBlockTypesByBiome(biomeType);
 
+            IBiome biomeInst = null;
 
-            var blocks = new List<WorldCreationBlock>();
-            var possibleBlockTypes = Biome.GetPossibleBaseBlockTypesByBiome(this._biomeType);
-            var blockRandomizer = new System.Random();
+            switch (biomeType)
+            {
+                case Enums.BiomeTypes.Gras:
+                    biomeInst = new GrassBiome();
+                    break;
+            }
 
+            this._blocks = new List<WorldCreationBlock>();
+            var groundRandomizer = new System.Random();
 
             for (ushort i = 0; i < this._biomeHeight; i++)
             {
@@ -78,19 +85,38 @@ namespace Assets.GameObjects.World
                     var block = new WorldCreationBlock();
                     block.X = j;
                     block.Y = i;
-                    block.BackgroundType = (ushort)blockRandomizer.Next(possibleBlockTypes.Count - 1);
-                    if (block.BackgroundType != (ushort)Enums.BaseBlockType.Nothing)
+
+                    //Die ersten ca. 200 reihen besitzen keine Blöcke
+                    if (i <= this._groundLevelMin)
                     {
-                        //ein vorderer Block kann nur existieren, wenn auch einer im Hintergrund existiert.
-                        block.ForegroundType = (ushort)blockRandomizer.Next(possibleBlockTypes.Count - 1);
+                        block.BackgroundType = 0;
+                        block.ForegroundType = 0;
+                    }
+                    else if (i > this._groundLevelMin && i <= this._groundLevelMax)
+                    {
+                        //50% Chance, dass es etwas enthält
+                        if (groundRandomizer.Next(0, 2) == 0)
+                        {
+                            block.BackgroundType = 0;
+                            block.ForegroundType = 0;
+                        }
+                        else
+                        {
+                            block.BackgroundType = (ushort)biomeInst.MainBlockType;
+                            block.ForegroundType = (ushort)biomeInst.MainBlockType;
+                        }
                     }
                     else
                     {
-                        block.ForegroundType = (ushort)Enums.BaseBlockType.Nothing;
+                        //zuerst alles mit dem Hauptblock füllen
+                        block.BackgroundType = (ushort)biomeInst.MainBlockType;
+                        block.ForegroundType = (ushort)biomeInst.MainBlockType;
                     }
-                    blocks.Add(block);
+                    this._blocks.Add(block);
                 }
             }
+
+            this.FillWithMinerals();
 
             //Biom vollständig. Jetzt muss es als Datei gespeichert werden
             using (var fs = File.Create(this._biomeSaveFilePath))
@@ -101,7 +127,7 @@ namespace Assets.GameObjects.World
                 this._binaryWriter.Write((int)size);
                 this._binaryWriter.Write((int)biomeType);
 
-                foreach (var block in blocks)
+                foreach (var block in this._blocks)
                 {
                     //Da immer Reihe für Reihe und dabei Block für Block angegeben werden, ist eine Koordinate
                     //normalerweise nicht nötig. Deswegen auskommentiert. Halbiert die Größe des Save-Files
@@ -110,6 +136,14 @@ namespace Assets.GameObjects.World
                     this._binaryWriter.Write(block.BackgroundType);
                     this._binaryWriter.Write(block.ForegroundType);
                 }
+            }
+        }
+
+        private void FillWithMinerals()
+        {
+            foreach(var block in this._blocks)
+            {
+
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.GameObjects.Attibutes;
 
 public class Enums : MonoBehaviour
 {
@@ -16,24 +17,31 @@ public class Enums : MonoBehaviour
         Snow
     }
 
-    public enum BlockClass
+    /// <summary>
+    /// Die möglichen Blocktypen
+    /// </summary>
+    public enum BlockTypes
     {
-        Foreground,
-        Background,
-        Item,
-        Mine
+        [BlockImage("", "")]
+        Nothing,
+        [BlockImage("Tiles/Earth_BG_1", "Tiles/Earth_FG_1")]
+        Earth,
+        [BlockImage("Tiles/Stone_BG_1", "Tiles/Stone_FG_1")]
+        Stone,
+        [BlockImage("", "Tiles/Water_FG")]
+        Water,
+        [BlockImage("Tiles/Iron_BG_1", "Tiles/Iron_FG_1")]
+        Iron,
+        [BlockImage("Tiles/Coal_BG_1", "Tiles/Coal_FG_1")]
+        Coal
     }
 
     /// <summary>
-    /// Die möglichen Basis-Blöcke - Blöcke, die das grundlegende Layout eines Bioms darstellen, ohne Besonderheiten wie Dungeons, Minen, die Basis usw.
+    /// Die möglichen Blöcke, die sich im Hintergrund befinden können
     /// </summary>
-    public enum BaseBlockType
+    public enum BlockLevel
     {
-        Nothing,
-        Earth,
-        Stone,
-        Water,
-        Iron,
-        Coal
+        Background,
+        Foreground
     }
 }

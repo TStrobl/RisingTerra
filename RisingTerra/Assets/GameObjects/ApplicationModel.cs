@@ -11,12 +11,12 @@ public class ApplicationModel
     /// <summary>
     /// Die Anzahl der sichtbaren Blöcke in der Horizontalen
     /// </summary>
-    public const int VisibleBlocksHorizontal = 200;
+    public const int VisibleBlocksHorizontal = 100;
 
     /// <summary>
     /// Die Anzahl der sichtbaren Blöcke in der Vertikalen
     /// </summary>
-    public const int VisibleBlocksVertical = 200;
+    public const int VisibleBlocksVertical = 60;
 
     /// <summary>
     /// Höhe eines Blocks

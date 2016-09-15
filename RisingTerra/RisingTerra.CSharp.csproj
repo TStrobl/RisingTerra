@@ -70,16 +70,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Controls\MainMenuCommands.cs" />
+    <Compile Include="Assets\Extensions.cs" />
     <Compile Include="Assets\Fonts\Script\scriptTexttest.cs" />
     <Compile Include="Assets\GameObjects\ApplicationModel.cs" />
-    <Compile Include="Assets\GameObjects\Blocks\BaseBlock.cs" />
+    <Compile Include="Assets\GameObjects\Attibutes\BlockImageAttribute.cs" />
+    <Compile Include="Assets\GameObjects\Biomes\GrassBiome.cs" />
+    <Compile Include="Assets\GameObjects\Blocks\BackgroundBlock.cs" />
+    <Compile Include="Assets\GameObjects\Blocks\ForegroundBlock.cs" />
     <Compile Include="Assets\GameObjects\Enums.cs" />
+    <Compile Include="Assets\GameObjects\Interfaces\IBiome.cs" />
     <Compile Include="Assets\GameObjects\Interfaces\IBlock.cs" />
     <Compile Include="Assets\GameObjects\World\Biome.cs" />
+    <Compile Include="Assets\GameObjects\World\MineralRate.cs" />
     <Compile Include="Assets\GameObjects\World\World.cs" />
     <Compile Include="Assets\GameObjects\World\WorldBuilder.cs" />
     <Compile Include="Assets\GameObjects\World\WorldCreationBlock.cs" />
-    <Compile Include="Assets\MyAssets\TileRenderer.cs" />
     <Compile Include="Assets\PlayerControl.cs" />
   </ItemGroup>
   <ItemGroup>

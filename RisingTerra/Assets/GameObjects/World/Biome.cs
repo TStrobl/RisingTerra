@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Assets.GameObjects.Interfaces;
+using System;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(RectTransform))]
 public class Biome : MonoBehaviour
 {
     /// <summary>
@@ -37,14 +39,14 @@ public class Biome : MonoBehaviour
     public string SaveFileName;
 
     /// <summary>
-    /// Block für Erde im Vordergrund
+    /// Ein leerer Block
     /// </summary>
-    public GameObject EarthBlockForeground;
+    public GameObject BackgroundBlock;
 
     /// <summary>
-    /// Block für Erde im Vordergrund
+    /// Ein leerer Block
     /// </summary>
-    public GameObject EarthBlockBackground;
+    public GameObject ForegroundBlock;
 
     /// <summary>
     /// Das Level, also wie stark z.B. die Gegner sind
@@ -72,33 +74,25 @@ public class Biome : MonoBehaviour
     public int Width { get; set; }
 
     /// <summary>
-    /// Gibt die möglichen Basis-Blöcke zurück, die ein Biom enthalten kann
+    /// Das Grid im Hintergrund
     /// </summary>
-    /// <param name="biomeType">Der Typ des Bioms</param>
-    /// <returns>Die möglichen Block-Typen</returns>
-    public static List<Enums.BaseBlockType> GetPossibleBaseBlockTypesByBiome(Enums.BiomeTypes biomeType)
+    private GridLayoutGroup _bgGrid;
+
+    /// <summary>
+    /// Das Grid im Vordergrund
+    /// </summary>
+    private GridLayoutGroup _fgGrid;
+
+    void Awake()
     {
-        var result = new List<Enums.BaseBlockType>();
-        switch (biomeType)
-        {
-            case Enums.BiomeTypes.Home:
-                result.Add(Enums.BaseBlockType.Nothing);
-                result.Add(Enums.BaseBlockType.Earth);
-                result.Add(Enums.BaseBlockType.Stone);
-                result.Add(Enums.BaseBlockType.Water);
-                result.Add(Enums.BaseBlockType.Iron);
-                result.Add(Enums.BaseBlockType.Coal);
-                break;
-        }
-        return result;
+        this._bgGrid = this.GetComponentsInChildren<GridLayoutGroup>()[0];
+        this._fgGrid = this.GetComponentsInChildren<GridLayoutGroup>()[1];
     }
-
-
 
     void Start()
     {
         this.SaveFileName = ApplicationModel.CurrentBiomeFileName;
-        this.SaveFileName = "D:\\Home1.bak";
+        this.SaveFileName = "D:\\Grass1.bak";
         this._allVisibleFGBlocks = new List<GameObject>();
         this._allVisibleBGBlocks = new List<GameObject>();
 
@@ -114,7 +108,7 @@ public class Biome : MonoBehaviour
 
 
             this._currentX = this.Width / 2;
-            this._currentY = 203;
+            this._currentY = 180;
 
             var beginPosY = (this._currentY * this.Width) * WorldCreationBlock.ByteSize;
             var beginPosX = (this._currentX - (ApplicationModel.VisibleBlocksHorizontal / 2)) * WorldCreationBlock.ByteSize;
@@ -127,23 +121,53 @@ public class Biome : MonoBehaviour
                 {
                     var blockTypeBG = binaryReader.ReadUInt16();
                     var blockTypeFG = binaryReader.ReadUInt16();
-                    GameObject block = null;
-                    if (blockTypeFG > 0)
-                    {
-                        block = Instantiate(EarthBlockForeground, new Vector3((i * ApplicationModel.BlockWidth) - (ApplicationModel.VisibleBlocksHorizontal * ApplicationModel.BlockWidth / 2), (j * ApplicationModel.BlockHeight) - (ApplicationModel.VisibleBlocksVertical * ApplicationModel.BlockHeight / 2)), Quaternion.identity) as GameObject;
-                        this._allVisibleFGBlocks.Add(block);
-                    }
-                    else
-                    {
-                        block = Instantiate(EarthBlockBackground, new Vector3((i * ApplicationModel.BlockWidth) - (ApplicationModel.VisibleBlocksHorizontal * ApplicationModel.BlockWidth / 2), (j * ApplicationModel.BlockHeight) - (ApplicationModel.VisibleBlocksVertical * ApplicationModel.BlockHeight / 2)), Quaternion.identity) as GameObject;
-                        this._allVisibleBGBlocks.Add(block);
-                    }
+                    GameObject bgBlock = null;
+                    GameObject fgBlock = null;
+                    var vector = new Vector3((i * ApplicationModel.BlockWidth), (j * ApplicationModel.BlockHeight) - 1500);                    //var vector = new Vector3(200, 200);
+                    var bgAsEnum = (Enums.BlockTypes)blockTypeBG;
+                    var fgAsEnum = (Enums.BlockTypes)blockTypeFG;
 
-                    var baseBlockComponent = block.GetComponent<BaseBlock>();
-                    baseBlockComponent.RelativePosX = (ushort)i;
-                    baseBlockComponent.RelativePosY = (ushort)j;
-                    baseBlockComponent.PosX = (ushort)(this._currentX + i);
-                    baseBlockComponent.PosY = (ushort)(this._currentY + j);
+
+                    bgBlock = Instantiate(this.BackgroundBlock);
+                    bgBlock.GetComponent<BackgroundBlock>().BlockType = bgAsEnum;
+                    bgBlock.transform.SetParent(this._bgGrid.transform);
+
+                    fgBlock = Instantiate(this.ForegroundBlock);
+                    if (i % 3 == 0) fgBlock.GetComponent<ForegroundBlock>().BlockType = bgAsEnum;
+                    fgBlock.transform.SetParent(this._fgGrid.transform);
+
+                    //bgBlock.transform.parent = this.transform;
+                    //bgBlock.transform.localPosition = vector;
+
+                    //switch (fgAsEnum)
+                    //{
+                    //    case Enums.BlockTypes.Coal:
+                    //        fgBlock = Instantiate(CoalBlockForeground, vector, Quaternion.identity) as GameObject;
+                    //        break;
+                    //    case Enums.BlockTypes.Earth:
+                    //        fgBlock = Instantiate(EarthBlockForeground, vector, Quaternion.identity) as GameObject;
+                    //        break;
+                    //    case Enums.BlockTypes.Stone:
+                    //        fgBlock = Instantiate(StoneBlockForeground, vector, Quaternion.identity) as GameObject;
+                    //        break;
+                    //    case Enums.BlockTypes.Iron:
+                    //        fgBlock = Instantiate(IronBlockForeground, vector, Quaternion.identity) as GameObject;
+                    //        break;
+                    //    case Enums.BlockTypes.Water:
+                    //        fgBlock = Instantiate(WaterBlock, vector, Quaternion.identity) as GameObject;
+                    //        break;
+                    //    default:
+                    //        fgBlock = Instantiate(EmptyBlock, vector, Quaternion.identity) as GameObject;
+                    //        break;
+                    //}
+
+                    //this._allVisibleFGBlocks.Add(block);
+
+                    //var baseBlockComponent = block.GetComponent<BaseBlock>();
+                    //baseBlockComponent.RelativePosX = (ushort)i;
+                    //baseBlockComponent.RelativePosY = (ushort)j;
+                    //baseBlockComponent.PosX = (ushort)(this._currentX + i);
+                    //baseBlockComponent.PosY = (ushort)(this._currentY + j);
                 }
                 //dann in die nächste Reihe springen, indem eimalig die maximale Breite hinzugefügt wird
                 fs.Seek((this.Width - ApplicationModel.VisibleBlocksHorizontal) * WorldCreationBlock.ByteSize, SeekOrigin.Current);
