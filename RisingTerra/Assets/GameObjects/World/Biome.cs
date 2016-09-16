@@ -49,6 +49,11 @@ public class Biome : MonoBehaviour
     public GameObject ForegroundBlock;
 
     /// <summary>
+    /// Ein Leerer Block zum befüllen des Grids, das ohne irgendeine Steuerung auskommt
+    /// </summary>
+    public GameObject EmptyBlock;
+
+    /// <summary>
     /// Das Level, also wie stark z.B. die Gegner sind
     /// </summary>
     public int Level { get; set; }
@@ -127,47 +132,29 @@ public class Biome : MonoBehaviour
                     var bgAsEnum = (Enums.BlockTypes)blockTypeBG;
                     var fgAsEnum = (Enums.BlockTypes)blockTypeFG;
 
+                    if (bgAsEnum != Enums.BlockTypes.Nothing)
+                    {
+                        bgBlock = Instantiate(this.BackgroundBlock);
+                        bgBlock.GetComponent<BackgroundBlock>().BlockType = bgAsEnum;
+                        bgBlock.transform.SetParent(this._bgGrid.transform);
+                    }
+                    else
+                    {
+                        bgBlock = Instantiate(this.EmptyBlock);
+                        bgBlock.transform.SetParent(this._bgGrid.transform);
+                    }
 
-                    bgBlock = Instantiate(this.BackgroundBlock);
-                    bgBlock.GetComponent<BackgroundBlock>().BlockType = bgAsEnum;
-                    bgBlock.transform.SetParent(this._bgGrid.transform);
-
-                    fgBlock = Instantiate(this.ForegroundBlock);
-                    if (i % 3 == 0) fgBlock.GetComponent<ForegroundBlock>().BlockType = bgAsEnum;
-                    fgBlock.transform.SetParent(this._fgGrid.transform);
-
-                    //bgBlock.transform.parent = this.transform;
-                    //bgBlock.transform.localPosition = vector;
-
-                    //switch (fgAsEnum)
-                    //{
-                    //    case Enums.BlockTypes.Coal:
-                    //        fgBlock = Instantiate(CoalBlockForeground, vector, Quaternion.identity) as GameObject;
-                    //        break;
-                    //    case Enums.BlockTypes.Earth:
-                    //        fgBlock = Instantiate(EarthBlockForeground, vector, Quaternion.identity) as GameObject;
-                    //        break;
-                    //    case Enums.BlockTypes.Stone:
-                    //        fgBlock = Instantiate(StoneBlockForeground, vector, Quaternion.identity) as GameObject;
-                    //        break;
-                    //    case Enums.BlockTypes.Iron:
-                    //        fgBlock = Instantiate(IronBlockForeground, vector, Quaternion.identity) as GameObject;
-                    //        break;
-                    //    case Enums.BlockTypes.Water:
-                    //        fgBlock = Instantiate(WaterBlock, vector, Quaternion.identity) as GameObject;
-                    //        break;
-                    //    default:
-                    //        fgBlock = Instantiate(EmptyBlock, vector, Quaternion.identity) as GameObject;
-                    //        break;
-                    //}
-
-                    //this._allVisibleFGBlocks.Add(block);
-
-                    //var baseBlockComponent = block.GetComponent<BaseBlock>();
-                    //baseBlockComponent.RelativePosX = (ushort)i;
-                    //baseBlockComponent.RelativePosY = (ushort)j;
-                    //baseBlockComponent.PosX = (ushort)(this._currentX + i);
-                    //baseBlockComponent.PosY = (ushort)(this._currentY + j);
+                    if (fgAsEnum != Enums.BlockTypes.Nothing)
+                    {
+                        fgBlock = Instantiate(this.ForegroundBlock);
+                        fgBlock.GetComponent<ForegroundBlock>().BlockType = bgAsEnum;
+                        fgBlock.transform.SetParent(this._fgGrid.transform);
+                    }
+                    else
+                    {
+                        fgBlock = Instantiate(this.EmptyBlock);
+                        fgBlock.transform.SetParent(this._fgGrid.transform);
+                    }
                 }
                 //dann in die nächste Reihe springen, indem eimalig die maximale Breite hinzugefügt wird
                 fs.Seek((this.Width - ApplicationModel.VisibleBlocksHorizontal) * WorldCreationBlock.ByteSize, SeekOrigin.Current);

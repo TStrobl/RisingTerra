@@ -44,4 +44,22 @@ public class Enums : MonoBehaviour
         Background,
         Foreground
     }
+
+    public enum MineralOccurance
+    {
+        [MineralOccuranceSize(1)]
+        SingleBlock,
+        [MineralOccuranceSize(5)]
+        VerySmall,
+        [MineralOccuranceSize(8)]
+        Small,
+        [MineralOccuranceSize(11)]
+        Medium,
+        [MineralOccuranceSize(15)]
+        Large,
+        [MineralOccuranceSize(25)]
+        VeryLarge,
+        [MineralOccuranceSize(100)]
+        Unlimited //z.B. für Stein
+    }
 }

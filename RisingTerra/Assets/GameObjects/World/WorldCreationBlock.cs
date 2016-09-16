@@ -6,16 +6,6 @@
 public struct WorldCreationBlock
 {
     /// <summary>
-    /// X-Koordinate im Biom
-    /// </summary>
-	public ushort X { get; set; }
-
-    /// <summary>
-    /// Y-Koordinate im Biom
-    /// </summary>
-    public ushort Y { get; set; }
-
-    /// <summary>
     /// Typ des Blocks im Vordergrund
     /// </summary>
     public ushort ForegroundType { get; set; }
@@ -24,6 +14,21 @@ public struct WorldCreationBlock
     /// Typ des Blocks im Hintergrund
     /// </summary>
     public ushort BackgroundType { get; set; }
+
+    /// <summary>
+    /// Ist hier eine Höhle
+    /// </summary>
+    public bool IsCave { get; set; }
+
+    /// <summary>
+    /// Ist hier irgendeine Flüssigkeit, also z.B. Wasser
+    /// </summary>
+    public bool IsFluid { get; set; }
+
+    /// <summary>
+    /// Ist hier ein Mineralienvorkommen, also z.b. Kohle
+    /// </summary>
+    public bool IsMineral { get; set; }
 
     /// <summary>
     /// Die Größe des Objekts zum Berechnen des BinaryReaders

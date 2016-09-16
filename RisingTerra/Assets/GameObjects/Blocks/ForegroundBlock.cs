@@ -5,6 +5,7 @@ using Assets.GameObjects.Attibutes;
 
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(BoxCollider2D))]
 [ExecuteInEditMode]
 public class ForegroundBlock : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class ForegroundBlock : MonoBehaviour
     /// </summary>
     private Dictionary<Enums.BlockTypes, string> _imagePaths;
 
+    /// <summary>
+    /// De Kollisionsabfrage
+    /// </summary>
+    private BoxCollider2D _boxCollider;
 
     private SpriteRenderer _spriteRenderer;
 
@@ -24,11 +29,17 @@ public class ForegroundBlock : MonoBehaviour
     {
         this._spriteRenderer = this.GetComponent<SpriteRenderer>();
         this._imagePaths = new Dictionary<Enums.BlockTypes, string>();
+        this._boxCollider = this.GetComponent<BoxCollider2D>();
     }
 
     // Use this for initialization
     void Start()
     {
+        if(this.BlockType == Enums.BlockTypes.Nothing)
+        {
+            this._boxCollider.enabled = false;
+        }
+
         this.ChangeSpriteForBlockType();
     }
 
@@ -43,6 +54,11 @@ public class ForegroundBlock : MonoBehaviour
         if (prevBlocktype != this.BlockType)
         {
             prevBlocktype = this.BlockType;
+            if(this.BlockType != Enums.BlockTypes.Nothing)
+            {
+                this._boxCollider.enabled = true;
+            }
+
             if (!this._imagePaths.ContainsKey(this.BlockType))
             {
                 var imageAttr = this.BlockType.GetMemberAttribute<BlockImageAttribute>();

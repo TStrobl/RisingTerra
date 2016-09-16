@@ -16,5 +16,10 @@ namespace Assets.GameObjects.World
         /// Die prozentuale Rate des Minerals basierend auf 1 = 100%
         /// </summary>
         public double Rate { get; set; }
+
+        /// <summary>
+        /// Die erlaubte Größe der Mineralvorkommen
+        /// </summary>
+        public Enums.MineralOccurance MaxOccuranceSize { get; set; }
     }
 }

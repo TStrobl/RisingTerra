@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>5.3.5f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -74,6 +76,7 @@
     <Compile Include="Assets\Fonts\Script\scriptTexttest.cs" />
     <Compile Include="Assets\GameObjects\ApplicationModel.cs" />
     <Compile Include="Assets\GameObjects\Attibutes\BlockImageAttribute.cs" />
+    <Compile Include="Assets\GameObjects\Attibutes\MineralOccuranceSizeAttribute.cs" />
     <Compile Include="Assets\GameObjects\Biomes\GrassBiome.cs" />
     <Compile Include="Assets\GameObjects\Blocks\BackgroundBlock.cs" />
     <Compile Include="Assets\GameObjects\Blocks\ForegroundBlock.cs" />

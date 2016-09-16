@@ -22,9 +22,9 @@ namespace Assets.GameObjects.Biomes
             get
             {
                 var result = new List<MineralRate>();
-                result.Add(new MineralRate {MineralType = Enums.BlockTypes.Coal, Rate = 0.1 });
-                result.Add(new MineralRate { MineralType = Enums.BlockTypes.Iron, Rate = 0.05 });
-                result.Add(new MineralRate { MineralType = Enums.BlockTypes.Stone, Rate = 0.3 });
+                result.Add(new MineralRate { MineralType = Enums.BlockTypes.Coal, Rate = 0.001, MaxOccuranceSize = Enums.MineralOccurance.Large });
+                result.Add(new MineralRate { MineralType = Enums.BlockTypes.Iron, Rate = 0.005, MaxOccuranceSize = Enums.MineralOccurance.Small });
+                result.Add(new MineralRate { MineralType = Enums.BlockTypes.Stone, Rate = 0.4, MaxOccuranceSize = Enums.MineralOccurance.Unlimited });
                 return result;
             }
         }
