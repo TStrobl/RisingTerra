@@ -3,25 +3,47 @@ using System.Collections;
 
 namespace RisingTerra.Assets
 {
+    [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(BoxCollider2D))]
     public class PlayerControl : MonoBehaviour
     {
         private Rigidbody2D _rigiBody;
 
         private Animator _hero;
 
-        /// <summary>
-        /// Ist die Figur auf dem Boden
-        /// </summary>
-        private bool _grounded;
+        private BoxCollider2D _collider;
 
-        private bool _isJumping;
+        private Animator _toolAnimator;
+
+        /// <summary>
+        /// Die maximale Höhe, die der Charakter springen kann
+        /// </summary>
+        private int _maxVerticalForce;
+
+        /// <summary>
+        /// blickt der Charakter nach rechts
+        /// </summary>
+        private bool _isFacingRight;
+
+        /// <summary>
+        /// Aktuell ablaufende Animation
+        /// </summary>
+        private string _currentAnimation;
+
+        /// <summary>
+        /// Linke Maustaste wird gehalten
+        /// </summary>
+        private bool _isTriggeringLeftMouse;
 
         void Awake()
         {
+            this._maxVerticalForce = 20;
             this._hero = this.GetComponent<Animator>();
-            this._hero.Play("Hero_Idle");
+            this._hero.Play("Hero_Idle_Left");
             this._rigiBody = this.GetComponent<Rigidbody2D>();
+            this._collider = this.GetComponent<BoxCollider2D>();
+            this._toolAnimator = GetComponentsInChildren<Animator>()[1];
         }
 
         // Use this for initialization
@@ -33,6 +55,19 @@ namespace RisingTerra.Assets
         // Update is called once per frame
         void Update()
         {
+            if (Input.GetButtonDown("Vertical") && Input.GetAxis("Vertical") > 0 && this.IsGrounded())
+            {
+                this._rigiBody.velocity += Vector2.up * this._maxVerticalForce;
+            }
+
+            if (Input.GetButtonUp("Vertical") && Input.GetAxis("Vertical") > 0)
+            {
+                if (this._rigiBody.velocity.y > 0)
+                {
+                    this._rigiBody.velocity -= new Vector2(0, this._rigiBody.velocity.y);
+                }
+            }
+
             if (Input.GetButton("Horizontal"))
             {
                 var axis = Input.GetAxis("Horizontal");
@@ -43,11 +78,7 @@ namespace RisingTerra.Assets
                     {
                         this._rigiBody.velocity += Vector2.right;
                     }
-
-                    var stateInfo = this._hero.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
-                    this._hero.enabled = true;
-                    this.GetComponent<SpriteRenderer>().flipX = true;
-                    this._hero.Play("Hero_Walk");
+                    this._isFacingRight = true;
                 }
                 else
                 {
@@ -55,64 +86,97 @@ namespace RisingTerra.Assets
                     {
                         this._rigiBody.velocity += Vector2.left;
                     }
-                    this._hero.enabled = true;
-                    this.GetComponent<SpriteRenderer>().flipX = false;
-                    this._hero.Play("Hero_Walk");
+                    this._isFacingRight = false;
                 }
             }
-
             if (Input.GetButtonUp("Horizontal"))
             {
-                this._hero.Play("Hero_Idle");
                 this._rigiBody.velocity -= new Vector2(this._rigiBody.velocity.x, 0);
-                //this._hero.GetComponent<Animator>().enabled = false;
             }
 
-            if (Input.GetButtonDown("Vertical") && Input.GetAxis("Vertical") > 0)
+            this.SetAnimation();
+
+            if (Input.GetButton("Fire1"))
             {
-                this._isJumping = true;
+                this._isTriggeringLeftMouse = true;
             }
-
-            if (Input.GetButton("Vertical") && this._grounded)
+            else
             {
-                var axis = Input.GetAxis("Vertical");
+                this._isTriggeringLeftMouse = false;
+            }
+        }
 
-                if (axis > 0)
+        void FixedUpdate()
+        {
+
+        }
+
+        void SetAnimation()
+        {
+            var isWalking = this._rigiBody.velocity.x != 0;
+
+            string nextAnimation = string.Empty;
+            string nextToolAnimation = string.Empty;
+            if (isWalking)
+            {
+                if (this._isFacingRight)
                 {
-                    if (this._isJumping)
-                    {
-                        if (this._rigiBody.velocity.y < 25)
-                        {
-                            this._rigiBody.velocity += Vector2.up * 8;
-                        }
-                        else
-                        {
-                            this._isJumping = false;   
-                        }
-                    }
-
-                    var stateInfo = this._hero.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
-                    this._hero.enabled = true;
-                    this._hero.Play("Hero_Idle");
+                    nextToolAnimation = "Tool_Walk_Right";
+                    nextAnimation = "Hero_Walk_Right";
+                }
+                else
+                {
+                    nextToolAnimation = "Tool_Walk_Left";
+                    nextAnimation = "Hero_Walk_Left";
                 }
             }
-            if (Input.GetButtonUp("Vertical") && Input.GetAxis("Vertical") > 0)
+            else
             {
-                this._isJumping = false;
+                if (this._isFacingRight)
+                {
+                    nextToolAnimation = "Tool_Idle_Right";
+                    nextAnimation = "Hero_Idle_Right";
+                }
+                else
+                {
+                    nextToolAnimation = "Tool_Idle_Left";
+                    nextAnimation = "Hero_Idle_Left";
+                }
+            }
+
+            if (this._isTriggeringLeftMouse)
+            {
+                if (this._isFacingRight)
+                {
+                }
+                else
+                {
+                    nextToolAnimation = "Swing_Tool_Left";
+                }
+                this._toolAnimator.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            }
+            this._toolAnimator.Play(nextToolAnimation);
+
+            if (nextAnimation != this._currentAnimation)
+            {
+                this._hero.enabled = false; //Aktuelle Animation abbrechen und nächste setzen
+                this._hero.Play(nextAnimation);
+                this._currentAnimation = nextAnimation;
+                this._hero.enabled = true;
             }
         }
 
         void OnCollisionEnter2D(Collision2D coll)
         {
-            if (coll.gameObject.tag == "ForegroundBlock")
-            {
-                this._grounded = true;
-            }
         }
 
         void OnCollisionExit2D(Collision2D coll)
         {
-            this._grounded = false;
+        }
+
+        private bool IsGrounded()
+        {
+            return Physics2D.Raycast(this.transform.position, Vector2.down, this._collider.bounds.extents.y + 0.1f, 1 << LayerMask.NameToLayer("Foreground"));
         }
     }
 }
