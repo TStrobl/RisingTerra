@@ -62,4 +62,30 @@ public class Enums : MonoBehaviour
         [MineralOccuranceSize(100)]
         Unlimited //z.B. für Stein
     }
+
+    public enum ItemType
+    {
+        Nothing,
+        EarthBlock,
+        Pickaxe,
+        Axe,
+        Sword
+    }
+
+    public enum ItemClass
+    {
+        Nothing,
+        Tool,
+        Weapon,
+        Block,
+        Other
+    }
+
+    public enum Materials
+    {
+        Wood,
+        Stone,
+        Iron,
+        Steel
+    }
 }

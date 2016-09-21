@@ -83,6 +83,13 @@
     <Compile Include="Assets\GameObjects\Enums.cs" />
     <Compile Include="Assets\GameObjects\Interfaces\IBiome.cs" />
     <Compile Include="Assets\GameObjects\Interfaces\IBlock.cs" />
+    <Compile Include="Assets\GameObjects\Interfaces\IPlayerItem.cs" />
+    <Compile Include="Assets\GameObjects\PlayerItems\EmptyHands.cs" />
+    <Compile Include="Assets\GameObjects\PlayerItems\PlayerItem.cs" />
+    <Compile Include="Assets\GameObjects\PlayerItems\Tools\Axe.cs" />
+    <Compile Include="Assets\GameObjects\PlayerItems\Tools\Pickaxe.cs" />
+    <Compile Include="Assets\GameObjects\PlayerItems\Tools\StonePickaxe.cs" />
+    <Compile Include="Assets\GameObjects\PlayerItems\Tools\WoodPickaxe.cs" />
     <Compile Include="Assets\GameObjects\World\Biome.cs" />
     <Compile Include="Assets\GameObjects\World\MineralRate.cs" />
     <Compile Include="Assets\GameObjects\World\World.cs" />

@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections;
+using Assets.GameObjects.PlayerItems;
+using Assets.GameObjects.PlayerItems.Tools;
 
 namespace RisingTerra.Assets
 {
@@ -17,6 +20,16 @@ namespace RisingTerra.Assets
         private Animator _toolAnimator;
 
         /// <summary>
+        /// Das Gameobject, das für das Item des Characters steht
+        /// </summary>
+        private Transform _itemInHands;
+
+        /// <summary>
+        /// Das aktuelle Item
+        /// </summary>
+        private PlayerItem _currentPlayerItem;
+
+        /// <summary>
         /// Die maximale Höhe, die der Charakter springen kann
         /// </summary>
         private int _maxVerticalForce;
@@ -24,7 +37,7 @@ namespace RisingTerra.Assets
         /// <summary>
         /// blickt der Charakter nach rechts
         /// </summary>
-        private bool _isFacingRight;
+        public bool IsFacingRight { get; set; }
 
         /// <summary>
         /// Aktuell ablaufende Animation
@@ -43,7 +56,19 @@ namespace RisingTerra.Assets
             this._hero.Play("Hero_Idle_Left");
             this._rigiBody = this.GetComponent<Rigidbody2D>();
             this._collider = this.GetComponent<BoxCollider2D>();
-            this._toolAnimator = GetComponentsInChildren<Animator>()[1];
+
+            foreach (Transform transform in this.transform)
+            {
+                if (transform.name == "ItemInHands")
+                {
+                    this._itemInHands = transform;
+                    break;
+                }
+            }
+
+            var emptyHands = this._itemInHands.gameObject.AddComponent<EmptyHands>();
+            this._currentPlayerItem = emptyHands;
+            //this._toolAnimator = GetComponentsInChildren<Animator>()[1];
         }
 
         // Use this for initialization
@@ -78,7 +103,7 @@ namespace RisingTerra.Assets
                     {
                         this._rigiBody.velocity += Vector2.right;
                     }
-                    this._isFacingRight = true;
+                    this.IsFacingRight = true;
                 }
                 else
                 {
@@ -86,7 +111,7 @@ namespace RisingTerra.Assets
                     {
                         this._rigiBody.velocity += Vector2.left;
                     }
-                    this._isFacingRight = false;
+                    this.IsFacingRight = false;
                 }
             }
             if (Input.GetButtonUp("Horizontal"))
@@ -104,6 +129,19 @@ namespace RisingTerra.Assets
             {
                 this._isTriggeringLeftMouse = false;
             }
+
+            if (Input.GetAxis("Mouse ScrollWheel") < 0)
+            {
+                Destroy(this._itemInHands.GetComponent<PlayerItem>());
+                var pickaxe = this._itemInHands.gameObject.AddComponent<WoodPickaxe>();
+                this._currentPlayerItem = pickaxe;
+            }
+            else if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            {
+                Destroy(this._itemInHands.GetComponent<PlayerItem>());
+                var emptyHands = this._itemInHands.gameObject.AddComponent<StonePickaxe>();
+                this._currentPlayerItem = emptyHands;
+            }
         }
 
         void FixedUpdate()
@@ -119,43 +157,38 @@ namespace RisingTerra.Assets
             string nextToolAnimation = string.Empty;
             if (isWalking)
             {
-                if (this._isFacingRight)
+                if (this.IsFacingRight)
                 {
-                    nextToolAnimation = "Tool_Walk_Right";
                     nextAnimation = "Hero_Walk_Right";
                 }
                 else
                 {
-                    nextToolAnimation = "Tool_Walk_Left";
                     nextAnimation = "Hero_Walk_Left";
                 }
             }
             else
             {
-                if (this._isFacingRight)
+                if (this.IsFacingRight)
                 {
-                    nextToolAnimation = "Tool_Idle_Right";
                     nextAnimation = "Hero_Idle_Right";
                 }
                 else
                 {
-                    nextToolAnimation = "Tool_Idle_Left";
                     nextAnimation = "Hero_Idle_Left";
                 }
             }
 
             if (this._isTriggeringLeftMouse)
             {
-                if (this._isFacingRight)
+                if (this.IsFacingRight)
                 {
+                    nextAnimation = "Hero_Swing_Tool_Right";
                 }
                 else
                 {
-                    nextToolAnimation = "Swing_Tool_Left";
+                    nextAnimation = "Hero_Swing_Tool_Left";
                 }
-                this._toolAnimator.GetComponent<Animation>().wrapMode = WrapMode.Loop;
             }
-            this._toolAnimator.Play(nextToolAnimation);
 
             if (nextAnimation != this._currentAnimation)
             {
@@ -165,15 +198,7 @@ namespace RisingTerra.Assets
                 this._hero.enabled = true;
             }
         }
-
-        void OnCollisionEnter2D(Collision2D coll)
-        {
-        }
-
-        void OnCollisionExit2D(Collision2D coll)
-        {
-        }
-
+    
         private bool IsGrounded()
         {
             return Physics2D.Raycast(this.transform.position, Vector2.down, this._collider.bounds.extents.y + 0.1f, 1 << LayerMask.NameToLayer("Foreground"));

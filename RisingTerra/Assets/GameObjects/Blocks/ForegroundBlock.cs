@@ -19,6 +19,11 @@ public class ForegroundBlock : MonoBehaviour
     /// </summary>
     private BoxCollider2D _boxCollider;
 
+    /// <summary>
+    /// Ist der Block in Reichweite des Spielers
+    /// </summary>
+    private bool _isInRange;
+
     private SpriteRenderer _spriteRenderer;
 
     private Enums.BlockTypes prevBlocktype;
@@ -35,7 +40,7 @@ public class ForegroundBlock : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if(this.BlockType == Enums.BlockTypes.Nothing)
+        if (this.BlockType == Enums.BlockTypes.Nothing)
         {
             this._boxCollider.enabled = false;
         }
@@ -54,7 +59,7 @@ public class ForegroundBlock : MonoBehaviour
         if (prevBlocktype != this.BlockType)
         {
             prevBlocktype = this.BlockType;
-            if(this.BlockType != Enums.BlockTypes.Nothing)
+            if (this.BlockType != Enums.BlockTypes.Nothing)
             {
                 this._boxCollider.enabled = true;
             }
@@ -83,6 +88,35 @@ public class ForegroundBlock : MonoBehaviour
             {
                 this._spriteRenderer.sprite = Resources.Load<Sprite>(this._imagePaths[this.BlockType]);
             }
+        }
+    }
+
+    void OnMouseOver()
+    {
+        if (this._isInRange && this._spriteRenderer.color.a > 0.7f)
+        {
+            this._spriteRenderer.color = new Color(1.55f, 1.55f, 1.55f, 0.7f);
+        }
+    }
+
+    void OnMouseExit()
+    {
+        this._spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
+    }
+
+    void OnTriggerEnter2D(Collider2D coll)
+    {
+        if (coll.gameObject.tag == "Player")
+        {
+            this._isInRange = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D coll)
+    {
+        if (coll.gameObject.tag == "Player")
+        {
+            this._isInRange = false;
         }
     }
 }
