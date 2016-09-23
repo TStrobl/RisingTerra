@@ -5,28 +5,22 @@ using System.IO;
 using Assets.GameObjects.Interfaces;
 using System;
 using UnityEngine.UI;
+using Assets.GameObject.Blocks;
+using Assets.GameObjects.Blocks;
+using Assets.GameObjects.Biomes;
+using Assets.GameObjects.Attibutes;
 
 public class Biome : MonoBehaviour
 {
     /// <summary>
     /// Die aktuelle X-Koordinate, von dem aus die Blöcke geladen werden sollen
     /// </summary>
-    private int _currentX;
+    private ushort _currentX;
 
     /// <summary>
     /// Die aktuelle Y-Koordinate, von dem aus die Blöcke geladen werden sollen
     /// </summary>
-    private int _currentY;
-
-    /// <summary>
-    /// Alle Blöcke im Biome im Vordergrund
-    /// </summary>
-    private List<GameObject> _allVisibleFGBlocks;
-
-    /// <summary>
-    /// Alle Blöcke im Biome im Hintergrund
-    /// </summary>
-    private List<GameObject> _allVisibleBGBlocks;
+    private ushort _currentY;
 
     /// <summary>
     /// Name des Bioms
@@ -81,25 +75,36 @@ public class Biome : MonoBehaviour
     /// <summary>
     /// Das Grid im Hintergrund
     /// </summary>
-    private GridLayoutGroup _bgGrid;
+    private BiomeRenderer _bgGrid;
 
     /// <summary>
     /// Das Grid im Vordergrund
     /// </summary>
-    private GridLayoutGroup _fgGrid;
+    private BiomeRenderer _fgGrid;
 
     void Awake()
     {
-        this._bgGrid = this.GetComponentsInChildren<GridLayoutGroup>()[0];
-        this._fgGrid = this.GetComponentsInChildren<GridLayoutGroup>()[1];
+        this._bgGrid = this.GetComponentsInChildren<BiomeRenderer>()[0];
+        this._fgGrid = this.GetComponentsInChildren<BiomeRenderer>()[1];
+        ApplicationModel.ImagePaths = new Dictionary<Enums.BlockTypes, string>();
+
+        foreach (Enums.BlockTypes blockType in Enum.GetValues(typeof(Enums.BlockTypes)))
+        {
+            if (!ApplicationModel.ImagePaths.ContainsKey(blockType))
+            {
+                var imageAttr = blockType.GetMemberAttribute<BlockImageAttribute>();
+                if (imageAttr != null)
+                {
+                    ApplicationModel.ImagePaths.Add(blockType, imageAttr.ForegroundImagePath);
+                }
+            }
+        }
     }
 
     void Start()
     {
         this.SaveFileName = ApplicationModel.CurrentBiomeFileName;
         this.SaveFileName = "D:\\Grass1.bak";
-        this._allVisibleFGBlocks = new List<GameObject>();
-        this._allVisibleBGBlocks = new List<GameObject>();
 
         using (var fs = File.OpenRead(this.SaveFileName))
         {
@@ -112,49 +117,57 @@ public class Biome : MonoBehaviour
             this.Height = ApplicationModel.GetWorldHeight(this.WorldSize);
 
 
-            this._currentX = this.Width / 2;
+            this._currentX = (ushort)(this.Width / 2);
             this._currentY = 180;
 
             var beginPosY = (this._currentY * this.Width) * WorldCreationBlock.ByteSize;
             var beginPosX = (this._currentX - (ApplicationModel.VisibleBlocksHorizontal / 2)) * WorldCreationBlock.ByteSize;
 
+            int counter = 0;
             //Direkt auf die benötigte Reihe und Spalte springen
             fs.Seek(beginPosY + beginPosX, SeekOrigin.Current);
-            for (int j = 0; j < ApplicationModel.VisibleBlocksVertical; j++)
+            for (ushort j = 0; j < ApplicationModel.VisibleBlocksVertical; j++)
             {
-                for (int i = 0; i < ApplicationModel.VisibleBlocksHorizontal; i++)
+                for (ushort i = 0; i < ApplicationModel.VisibleBlocksHorizontal; i++)
                 {
                     var blockTypeBG = binaryReader.ReadUInt16();
                     var blockTypeFG = binaryReader.ReadUInt16();
                     GameObject bgBlock = null;
                     GameObject fgBlock = null;
-                    var vector = new Vector3((i * ApplicationModel.BlockWidth), (j * ApplicationModel.BlockHeight) - 1500);                    //var vector = new Vector3(200, 200);
                     var bgAsEnum = (Enums.BlockTypes)blockTypeBG;
                     var fgAsEnum = (Enums.BlockTypes)blockTypeFG;
 
                     if (bgAsEnum != Enums.BlockTypes.Nothing)
                     {
-                        bgBlock = Instantiate(this.BackgroundBlock);
-                        bgBlock.GetComponent<BackgroundBlock>().BlockType = bgAsEnum;
-                        bgBlock.transform.SetParent(this._bgGrid.transform);
+                        //bgBlock = Instantiate(this.BackgroundBlock);
+                        // bgBlock.GetComponent<BackgroundBlock>().BlockType = bgAsEnum;
+                        // bgBlock.transform.SetParent(this._bgGrid.transform);
                     }
                     else
                     {
-                        bgBlock = Instantiate(this.EmptyBlock);
-                        bgBlock.transform.SetParent(this._bgGrid.transform);
+                        // bgBlock = Instantiate(this.EmptyBlock);
+                        // bgBlock.transform.SetParent(this._bgGrid.transform);
                     }
 
                     if (fgAsEnum != Enums.BlockTypes.Nothing)
                     {
                         fgBlock = Instantiate(this.ForegroundBlock);
-                        fgBlock.GetComponent<ForegroundBlock>().BlockType = bgAsEnum;
-                        fgBlock.transform.SetParent(this._fgGrid.transform);
+                        ForegroundBlock blockComponent = fgBlock.GetComponent<ForegroundBlock>();
+                        blockComponent.BlockType = bgAsEnum;
+                        blockComponent.RelativePosX = i;
+                        blockComponent.RelativePosY = j;
+
+                        blockComponent.PosX = (ushort)(this._currentX + i);
+                        blockComponent.PosY = (ushort)(this._currentY + j);
+
+                        this._fgGrid.AddBlock(blockComponent);
                     }
                     else
                     {
-                        fgBlock = Instantiate(this.EmptyBlock);
-                        fgBlock.transform.SetParent(this._fgGrid.transform);
+                       // fgBlock = Instantiate(this.EmptyBlock);
+                        //fgBlock.transform.SetParent(this._fgGrid.transform);
                     }
+                    counter++;
                 }
                 //dann in die nächste Reihe springen, indem eimalig die maximale Breite hinzugefügt wird
                 fs.Seek((this.Width - ApplicationModel.VisibleBlocksHorizontal) * WorldCreationBlock.ByteSize, SeekOrigin.Current);

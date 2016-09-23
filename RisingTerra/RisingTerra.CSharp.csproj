@@ -77,8 +77,10 @@
     <Compile Include="Assets\GameObjects\ApplicationModel.cs" />
     <Compile Include="Assets\GameObjects\Attibutes\BlockImageAttribute.cs" />
     <Compile Include="Assets\GameObjects\Attibutes\MineralOccuranceSizeAttribute.cs" />
+    <Compile Include="Assets\GameObjects\Biomes\BiomeRenderer.cs" />
     <Compile Include="Assets\GameObjects\Biomes\GrassBiome.cs" />
     <Compile Include="Assets\GameObjects\Blocks\BackgroundBlock.cs" />
+    <Compile Include="Assets\GameObjects\Blocks\BaseBlock.cs" />
     <Compile Include="Assets\GameObjects\Blocks\ForegroundBlock.cs" />
     <Compile Include="Assets\GameObjects\Enums.cs" />
     <Compile Include="Assets\GameObjects\Interfaces\IBiome.cs" />

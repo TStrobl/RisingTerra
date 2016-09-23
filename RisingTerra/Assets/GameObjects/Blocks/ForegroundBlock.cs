@@ -2,121 +2,105 @@
 using System.Collections;
 using System.Collections.Generic;
 using Assets.GameObjects.Attibutes;
+using Assets.GameObjects.Blocks;
 
-[RequireComponent(typeof(RectTransform))]
-[RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(BoxCollider2D))]
-[ExecuteInEditMode]
-public class ForegroundBlock : MonoBehaviour
+namespace Assets.GameObjects.Blocks
 {
-    /// <summary>
-    /// Die Pfade zu den einzelnen Images
-    /// </summary>
-    private Dictionary<Enums.BlockTypes, string> _imagePaths;
-
-    /// <summary>
-    /// De Kollisionsabfrage
-    /// </summary>
-    private BoxCollider2D _boxCollider;
-
-    /// <summary>
-    /// Ist der Block in Reichweite des Spielers
-    /// </summary>
-    private bool _isInRange;
-
-    private SpriteRenderer _spriteRenderer;
-
-    private Enums.BlockTypes prevBlocktype;
-
-    public Enums.BlockTypes BlockType;
-
-    void Awake()
+    [RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(BoxCollider2D))]
+    [ExecuteInEditMode]
+    public class ForegroundBlock : BaseBlock
     {
-        this._spriteRenderer = this.GetComponent<SpriteRenderer>();
-        this._imagePaths = new Dictionary<Enums.BlockTypes, string>();
-        this._boxCollider = this.GetComponent<BoxCollider2D>();
-    }
 
-    // Use this for initialization
-    void Start()
-    {
-        if (this.BlockType == Enums.BlockTypes.Nothing)
+
+        /// <summary>
+        /// De Kollisionsabfrage
+        /// </summary>
+        private BoxCollider2D _boxCollider;
+
+        /// <summary>
+        /// Der Renderer für das Bild
+        /// </summary>
+        private SpriteRenderer _spriteRenderer;
+
+        /// <summary>
+        /// der vorige Typ des Blocks
+        /// </summary>
+        private Enums.BlockTypes prevBlocktype;
+
+        /// <summary>
+        /// Der aktuelle Typ des Blocks
+        /// </summary>
+        public Enums.BlockTypes BlockType;
+
+        protected override void Awake()
         {
-            this._boxCollider.enabled = false;
+            base.Awake();
+            this._spriteRenderer = this.GetComponent<SpriteRenderer>();
+            this._boxCollider = this.GetComponent<BoxCollider2D>();
         }
 
-        this.ChangeSpriteForBlockType();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        this.ChangeSpriteForBlockType();
-    }
-
-    private void ChangeSpriteForBlockType()
-    {
-        if (prevBlocktype != this.BlockType)
+        // Use this for initialization
+        protected override void Start()
         {
-            prevBlocktype = this.BlockType;
-            if (this.BlockType != Enums.BlockTypes.Nothing)
+            base.Start();
+            if (this.BlockType == Enums.BlockTypes.Nothing)
             {
-                this._boxCollider.enabled = true;
+                this._boxCollider.enabled = false;
             }
 
-            if (!this._imagePaths.ContainsKey(this.BlockType))
+            this.ChangeSpriteForBlockType();
+        }
+
+        // Update is called once per frame
+        protected override void Update()
+        {
+            base.Update();
+            this.ChangeSpriteForBlockType();
+        }
+
+        private void ChangeSpriteForBlockType()
+        {
+            if (prevBlocktype != this.BlockType)
             {
-                var imageAttr = this.BlockType.GetMemberAttribute<BlockImageAttribute>();
-                if (imageAttr != null)
+                prevBlocktype = this.BlockType;
+                if (this.BlockType != Enums.BlockTypes.Nothing)
                 {
-                    this._imagePaths.Add(this.BlockType, imageAttr.ForegroundImagePath);
+                    this._boxCollider.enabled = true;
                 }
 
-            }
-            if (string.IsNullOrEmpty(this._imagePaths[this.BlockType]))
-            {
-                if (Application.isPlaying)
+                if (string.IsNullOrEmpty(ApplicationModel.ImagePaths[this.BlockType]))
                 {
-                    this._spriteRenderer.sprite = null;
+                    if (Application.isPlaying)
+                    {
+                        this._spriteRenderer.sprite = null;
+                    }
+                    else
+                    {
+                        this._spriteRenderer.sprite = Resources.Load<Sprite>("Tiles/Placeholder");
+                    }
                 }
                 else
                 {
-                    this._spriteRenderer.sprite = Resources.Load<Sprite>("Tiles/Placeholder");
+                    this._spriteRenderer.sprite = Resources.Load<Sprite>(ApplicationModel.ImagePaths[this.BlockType]);
                 }
             }
-            else
+        }
+
+        void OnMouseOver()
+        {
+            if (this._isInRange && this._spriteRenderer.color.a > 0.7f)
             {
-                this._spriteRenderer.sprite = Resources.Load<Sprite>(this._imagePaths[this.BlockType]);
+                this._spriteRenderer.color = new Color(1.55f, 1.55f, 1.55f, 0.7f);
+                ApplicationModel.CurrentSelectedForegroundBlock = this;
             }
         }
-    }
 
-    void OnMouseOver()
-    {
-        if (this._isInRange && this._spriteRenderer.color.a > 0.7f)
+        void OnMouseExit()
         {
-            this._spriteRenderer.color = new Color(1.55f, 1.55f, 1.55f, 0.7f);
-        }
-    }
-
-    void OnMouseExit()
-    {
-        this._spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
-    }
-
-    void OnTriggerEnter2D(Collider2D coll)
-    {
-        if (coll.gameObject.tag == "Player")
-        {
-            this._isInRange = true;
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D coll)
-    {
-        if (coll.gameObject.tag == "Player")
-        {
-            this._isInRange = false;
+            this._spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
+            ApplicationModel.CurrentSelectedForegroundBlock = null;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.GameObjects.Blocks;
+using System.Collections.Generic;
 
 public class ApplicationModel
 {
@@ -9,14 +11,19 @@ public class ApplicationModel
     public static string CurrentBiomeFileName { get; set; }
 
     /// <summary>
-    /// Die Anzahl der sichtbaren Blöcke in der Horizontalen
+    /// Die Pfade zu den einzelnen Images
     /// </summary>
-    public const int VisibleBlocksHorizontal = 100;
+    public static Dictionary<Enums.BlockTypes, string> ImagePaths;
 
     /// <summary>
-    /// Die Anzahl der sichtbaren Blöcke in der Vertikalen
+    /// Die Anzahl der im Speiceher gehaltenen Blöcke in der Horizontalen
     /// </summary>
-    public const int VisibleBlocksVertical = 60;
+    public const int VisibleBlocksHorizontal = 80;
+
+    /// <summary>
+    /// Die Anzahl im Speiceher gehaltenen Blöcke in der Vertikalen
+    /// </summary>
+    public const int VisibleBlocksVertical = 50;
 
     /// <summary>
     /// Höhe eines Blocks
@@ -27,6 +34,11 @@ public class ApplicationModel
     /// Breite eines Blocks
     /// </summary>
     public const int BlockWidth = 25;
+
+    /// <summary>
+    /// Der aktuell "selektierte ForegroundBlock"
+    /// </summary>
+    public static ForegroundBlock CurrentSelectedForegroundBlock { get; set; }
 
     /// <summary>
     /// Gibt die Breite einer Welt zurück

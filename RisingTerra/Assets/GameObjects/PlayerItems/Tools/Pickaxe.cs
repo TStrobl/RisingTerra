@@ -61,6 +61,10 @@ namespace Assets.GameObjects.PlayerItems.Tools
         public override void Update()
         {
             base.Update();
+            if (Input.GetButton("Fire1") && ApplicationModel.CurrentSelectedForegroundBlock != null)
+            {
+                Destroy(ApplicationModel.CurrentSelectedForegroundBlock.gameObject);// ApplicationModel.CurrentSelectedForegroundBlock.DestroyComplete();
+            }
         }
 
         public void LoadAnimator()
