@@ -65,7 +65,7 @@ namespace Assets.GameObjects.Blocks
         /// <returns></returns>
         protected virtual void OnTriggerEnter2D(Collider2D coll)
         {
-            if (coll.gameObject.tag == "Player")
+            if (coll.gameObject.tag == "Player_RangeCheck")
             {
                 this._isInRange = true;
             }
@@ -77,7 +77,7 @@ namespace Assets.GameObjects.Blocks
         /// <param name="coll"></param>
         protected virtual void OnTriggerExit2D(Collider2D coll)
         {
-            if (coll.gameObject.tag == "Player")
+            if (coll.gameObject.tag == "Player_RangeCheck")
             {
                 this._isInRange = false;
             }
