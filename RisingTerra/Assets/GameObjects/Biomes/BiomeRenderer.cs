@@ -27,11 +27,23 @@ namespace Assets.GameObjects.Biomes
         /// </summary>
         private Camera _mainCamera;
 
+        /// <summary>
+        /// Höchster Punkt in der Mitte
+        /// </summary>
+        private Vector2 _highestMiddlePoint;
+
+        /// <summary>
+        /// Die momentan sichtbaren Blöcke des Renderers
+        /// </summary>
+        private BaseBlock[,] _visibleForegroundBlocks;
+
         protected override void Awake()
         {
             base.Awake();
             this._mainCamera = FindObjectOfType<Camera>();
             this.GetComponent<RectTransform>().sizeDelta = new Vector2(this.BlocksHorizontal, this.BlocksVertical);
+
+            this._visibleForegroundBlocks = new ForegroundBlock[ApplicationModel.VisibleBlocksHorizontal, ApplicationModel.VisibleBlocksVertical];
         }
 
         // Use this for initialization
@@ -51,11 +63,28 @@ namespace Assets.GameObjects.Biomes
         /// Fügt einen Block abhängig von seiner Position hinzu
         /// </summary>
         /// <param name="block">Der hinzuzufügende Block</param>
-        public void AddBlock(BaseBlock block)
+        public void AddBlock(BaseBlock block, ushort column, ushort row)
         {
             block.transform.SetParent(this.transform);
-            var pos = new Vector2(block.RelativePosX, (block.RelativePosY * (-1)));
-            block.GetComponent<RectTransform>().anchoredPosition = pos;
+            block.GetComponent<RectTransform>().position = block.WorldPosition;
+
+
+            this._visibleForegroundBlocks[column, row] = block;
+        }
+
+        internal void SetInitialPlayerPosition()
+        {
+            var middleX = ApplicationModel.VisibleBlocksHorizontal / 2;
+            for (int i = 0; i < ApplicationModel.VisibleBlocksVertical; i++)
+            {
+                if (this._visibleForegroundBlocks[middleX, i] != null)
+                {
+                    var middleHighestBlock = this._visibleForegroundBlocks[middleX, i];
+                    var localPos = middleHighestBlock.transform.position;
+                    ApplicationModel.Player.transform.localPosition = new Vector3(localPos.x + 0.5f, localPos.y + 2, 10);
+                    break;
+                }
+            }
         }
     }
 }

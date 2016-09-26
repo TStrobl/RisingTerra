@@ -19,14 +19,9 @@ namespace Assets.GameObjects.Blocks
         public ushort PosY { get; set; }
 
         /// <summary>
-        /// Die relative Position X des Blocks im gerenderten Bereich des Bioms
+        /// Die Position in der Welt, also abhängig von Biom
         /// </summary>
-        public ushort RelativePosX { get; set; }
-
-        /// <summary>
-        /// Die relative Position Y des Blocks im gerenderten Bereich des Bioms
-        /// </summary>
-        public ushort RelativePosY { get; set; }
+        public Vector2 WorldPosition { get; set; }
 
         /// <summary>
         /// Ist der Block in Reichweite des Spielers

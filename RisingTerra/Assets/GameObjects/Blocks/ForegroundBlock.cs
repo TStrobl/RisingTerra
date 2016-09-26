@@ -12,8 +12,6 @@ namespace Assets.GameObjects.Blocks
     [ExecuteInEditMode]
     public class ForegroundBlock : BaseBlock
     {
-
-
         /// <summary>
         /// De Kollisionsabfrage
         /// </summary>
@@ -85,6 +83,15 @@ namespace Assets.GameObjects.Blocks
                 {
                     this._spriteRenderer.sprite = Resources.Load<Sprite>(ApplicationModel.ImagePaths[this.BlockType]);
                 }
+            }
+        }
+
+        void OnMouseEnter()
+        {
+            if (this._isInRange && this._spriteRenderer.color.a > 0.7f)
+            {
+                this._spriteRenderer.color = new Color(1.55f, 1.55f, 1.55f, 0.7f);
+                ApplicationModel.CurrentSelectedForegroundBlock = this;
             }
         }
 

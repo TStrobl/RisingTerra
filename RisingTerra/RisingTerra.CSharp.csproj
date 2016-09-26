@@ -82,6 +82,7 @@
     <Compile Include="Assets\GameObjects\Blocks\BackgroundBlock.cs" />
     <Compile Include="Assets\GameObjects\Blocks\BaseBlock.cs" />
     <Compile Include="Assets\GameObjects\Blocks\ForegroundBlock.cs" />
+    <Compile Include="Assets\GameObjects\CameraControls\PlayerCameraControl.cs" />
     <Compile Include="Assets\GameObjects\Enums.cs" />
     <Compile Include="Assets\GameObjects\Interfaces\IBiome.cs" />
     <Compile Include="Assets\GameObjects\Interfaces\IBlock.cs" />

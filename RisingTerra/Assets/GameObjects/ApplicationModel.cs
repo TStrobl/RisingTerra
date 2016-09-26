@@ -2,6 +2,7 @@
 using System.Collections;
 using Assets.GameObjects.Blocks;
 using System.Collections.Generic;
+using RisingTerra.Assets;
 
 public class ApplicationModel
 {
@@ -39,6 +40,11 @@ public class ApplicationModel
     /// Der aktuell "selektierte ForegroundBlock"
     /// </summary>
     public static ForegroundBlock CurrentSelectedForegroundBlock { get; set; }
+
+    /// <summary>
+    /// Der Spieler
+    /// </summary>
+    public static PlayerControl Player { get; set; }
 
     /// <summary>
     /// Gibt die Breite einer Welt zurück

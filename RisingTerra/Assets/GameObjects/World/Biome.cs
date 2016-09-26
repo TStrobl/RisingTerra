@@ -154,17 +154,15 @@ public class Biome : MonoBehaviour
                         fgBlock = Instantiate(this.ForegroundBlock);
                         ForegroundBlock blockComponent = fgBlock.GetComponent<ForegroundBlock>();
                         blockComponent.BlockType = bgAsEnum;
-                        blockComponent.RelativePosX = i;
-                        blockComponent.RelativePosY = j;
-
                         blockComponent.PosX = (ushort)(this._currentX + i);
                         blockComponent.PosY = (ushort)(this._currentY + j);
+                        blockComponent.WorldPosition = this.CalcBlockToWorldPosition(blockComponent.PosX, blockComponent.PosY);
 
-                        this._fgGrid.AddBlock(blockComponent);
+                        this._fgGrid.AddBlock(blockComponent, i, j);
                     }
                     else
                     {
-                       // fgBlock = Instantiate(this.EmptyBlock);
+                        // fgBlock = Instantiate(this.EmptyBlock);
                         //fgBlock.transform.SetParent(this._fgGrid.transform);
                     }
                     counter++;
@@ -173,10 +171,25 @@ public class Biome : MonoBehaviour
                 fs.Seek((this.Width - ApplicationModel.VisibleBlocksHorizontal) * WorldCreationBlock.ByteSize, SeekOrigin.Current);
             }
         }
+
+        this._fgGrid.SetInitialPlayerPosition();
     }
 
     void Update()
     {
 
+    }
+
+    /// <summary>
+    /// Berechnet die relative Block-Koordinate im "Gitter" auf die Koordinate in der Welt um
+    /// </summary>
+    /// <returns></returns>
+    Vector2 CalcBlockToWorldPosition(ushort posX, ushort posY)
+    {
+        //x ist abhängig von der gesamten Breite des Bioms
+        var horizontalPositon = (this.Width / 2) - posX;
+        var verticalPos = (this.Height / 2) - posY;
+
+        return new Vector2(horizontalPositon, verticalPos);
     }
 }

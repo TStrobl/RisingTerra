@@ -69,6 +69,7 @@ namespace RisingTerra.Assets
             var emptyHands = this._itemInHands.gameObject.AddComponent<EmptyHands>();
             this._currentPlayerItem = emptyHands;
             //this._toolAnimator = GetComponentsInChildren<Animator>()[1];
+            ApplicationModel.Player = this;
         }
 
         // Use this for initialization
@@ -198,7 +199,7 @@ namespace RisingTerra.Assets
                 this._hero.enabled = true;
             }
         }
-    
+
         private bool IsGrounded()
         {
             return Physics2D.Raycast(this.transform.position, Vector2.down, this._collider.bounds.extents.y + 0.1f, 1 << LayerMask.NameToLayer("Foreground"));

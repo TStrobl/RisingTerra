@@ -63,8 +63,11 @@ namespace Assets.GameObjects.PlayerItems.Tools
             base.Update();
             if (Input.GetButton("Fire1") && ApplicationModel.CurrentSelectedForegroundBlock != null)
             {
-                Destroy(ApplicationModel.CurrentSelectedForegroundBlock.gameObject);// ApplicationModel.CurrentSelectedForegroundBlock.DestroyComplete();
+                DestroyImmediate(ApplicationModel.CurrentSelectedForegroundBlock.gameObject);// ApplicationModel.CurrentSelectedForegroundBlock.DestroyComplete();
             }
+            //ApplicationModel.Player.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 0.01f, ForceMode2D.Impulse);
+
+            //ApplicationModel.Player.transform.position += (Vector3.up * 0.001f); //Damit der Collider intern die Collision neu berechnet.
         }
 
         public void LoadAnimator()
