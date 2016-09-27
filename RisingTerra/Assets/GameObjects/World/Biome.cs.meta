@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 5a91abac3ca725f4681676bc0ce8a694
+timeCreated: 1473936241
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - EmptyBlock: {instanceID: 0}
+  - EarthBlockForeground: {fileID: 168944, guid: 97370b37ba805f245b9a873ce9c39aae,
+      type: 2}
+  - EarthBlockBackground: {instanceID: 0}
+  - CoalBlockForeground: {instanceID: 0}
+  - CoalBlockBackground: {instanceID: 0}
+  - IronBlockForeground: {instanceID: 0}
+  - IronBlockBackground: {instanceID: 0}
+  - StoneBlockForeground: {instanceID: 0}
+  - StoneBlockBackground: {instanceID: 0}
+  - WaterBlock: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
